@@ -174,7 +174,10 @@ class Analysis:
 
         contours, _ = cv.findContours(self.mask,
                                       cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE)
-        contours = [np.squeeze(contour) for contour in contours]
+        
+        print(contours)
+        
+        contours = [np.squeeze(contour) for contour in contours if contour.shape[0] > 5]
         logger.debug('Found contours')
 
         return contours
