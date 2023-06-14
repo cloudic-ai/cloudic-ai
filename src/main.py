@@ -1,5 +1,6 @@
 import os
 import cv2
+from classification.classification import Classification
 from cloud_analysis.analysis import Analysis
 import numpy as np
 from pareidolia.pareidolia import Pareidolia
@@ -9,6 +10,7 @@ INPUT_DIR = "data"
 
 def main():
     pareidolia = Pareidolia()
+    classification = Classification()
 
     # Delete the results folder if it exists
     if os.path.exists("results"):
@@ -51,6 +53,9 @@ def main():
                 print("No clouds found")
                 continue
 
+            classification_results = classification.evaluate(
+                analysis_results)
+
             masks = [np.tile(cloud.mask[:, :, np.newaxis], 3)
                      for cloud in analysis.clouds]
             pareidolia_results = pareidolia.evaluate_clouds(masks)
@@ -80,6 +85,10 @@ def main():
                     # Write the top 3 results to the file
                     f.write("\n".join(f"{i}: {j}" for i,
                             j in zip(top_3, results)))
+
+                # Save the results from classification
+                with open(f"results/{folder}/cloud_{i}/classification.txt", "w") as f:
+                    f.write(str(classification_results.iloc[i]))
 
 
 if __name__ == '__main__':

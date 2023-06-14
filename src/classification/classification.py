@@ -13,8 +13,28 @@ import numpy as np
 import pandas as pd
 from typing import List
 
-from src.classification.cloud_types import CLOUD_TYPES
-from src.constants import ABS_PATH, analysis_features
+from classification.cloud_types import CLOUD_TYPES
+
+analysis_features = ['center x',
+                     'center y',
+                     'contour perimeter',
+                     'contour area',
+                     'hull perimeter',
+                     'hull area',
+                     'roundness',
+                     'convexity',
+                     'solidity',
+                     'rectangularity',
+                     'elongation',
+                     'mean r',
+                     'mean g',
+                     'mean b',
+                     'std r',
+                     'std g',
+                     'std b',
+                     'std',
+                     'transparency',
+                     'sharp edges']
 
 logger = logging.getLogger('DeepCream.classification')
 
@@ -44,9 +64,7 @@ class Classification:
             type_columns.append(': '.join([group_name, type_name]))
 
     def __init__(self):
-        self.__scaler = joblib.load(
-            os.path.join(ABS_PATH, 'DeepCream', 'classification',
-                         'standard_scaler.bin'))
+        self.__scaler = joblib.load('src/classification/standard_scaler.bin')
 
     def evaluate(self, analysis: pd.DataFrame):
         """ Gets the probabilities to be of a specific cloud type for each cloud
